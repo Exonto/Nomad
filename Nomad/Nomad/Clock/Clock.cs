@@ -13,13 +13,19 @@ namespace PhysWorld.PhysLogic
 	/// </summary>
 	static class Clock
 	{
-		const long UPDATE_CAP = 10;
+		const double UPDATE_CAP = 10.0;
 
 		private static long GetCurrentTimeMS()
 		{
 			return DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 		}
 
+		/// <summary>
+		/// Starts the game clock.
+		/// </summary>
+		/// <remarks>
+		/// The clock ticks at a constant rate.
+		/// </remarks>
 		public static void Start()
 		{
 			double previous = GetCurrentTimeMS();
