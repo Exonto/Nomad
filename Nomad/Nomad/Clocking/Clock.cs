@@ -29,6 +29,14 @@ namespace Nomad.Clocking
 		private bool _isPaused;
 		public bool IsPaused { get { return this._isPaused; } }
 
+		private long _totalTicksElapsed;
+		public long TotalTicksElapsed { get { return this._totalTicksElapsed; } }
+		
+		public int AvgTicksPerSecond { get { return this.CalculateAverageTicksPerSecond(); } }
+
+		private double _totalMSElapsed;
+		public double TotalMSElapsed { get { return this._totalMSElapsed; } }
+
 		public Clock(double ticksPerSecond)
 		{
 			TICKS_PER_SECOND = ticksPerSecond;
@@ -64,12 +72,16 @@ namespace Nomad.Clocking
 
 					double elapsed = current - previous;
 
+					this._totalMSElapsed += elapsed;
+
 					accumulated += elapsed;
 
 					previous = current;
 
 					while (accumulated >= MS_PER_TICK)
 					{
+						++this._totalTicksElapsed;
+
 						this.LogicTick(MS_PER_TICK);
 
 						accumulated -= MS_PER_TICK;
@@ -80,7 +92,17 @@ namespace Nomad.Clocking
 
 		public void Stop()
 		{
+			this.Reset();
+
 			this._isTicking = false;
+		}
+
+		public void Reset()
+		{
+			this._isTicking = true;
+
+			this._totalMSElapsed = 0.0;
+			this._totalTicksElapsed = 0;
 		}
 
 		public void Play()
@@ -105,5 +127,12 @@ namespace Nomad.Clocking
 		}
 
 		#endregion
+
+		private int CalculateAverageTicksPerSecond()
+		{
+			int totalSeconds = (int)this.TotalMSElapsed / 1000;
+
+			return (int)(this.TotalTicksElapsed / totalSeconds);
+		}
 	}
 }
