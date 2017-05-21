@@ -17,6 +17,10 @@ namespace Nomad
 			InitializeComponent();
 		}
 
-
+		private void GameForm_FormClosed(object sender, FormClosedEventArgs e)
+		{
+			//Application.Exit();
+			//Environment.Exit(0);
+		}
 	}
 }

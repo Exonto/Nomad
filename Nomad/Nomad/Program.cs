@@ -21,8 +21,6 @@ namespace Nomad
 			Application.Run(new GameForm());
 
 			Initialize();
-
-			Logger.Log("Test");
 		}
 
 		/// <summary>
@@ -31,8 +29,11 @@ namespace Nomad
 		static void Initialize()
 		{
 			FolderManager.EnsureLogFolder();
+			FileManager.DeleteLogFile();
+			FileManager.EnsureLogFile();
 
-			Clock.Start();
+			Clock c = new Clock(100);
+			c.Start();
 		}
 	}
 }

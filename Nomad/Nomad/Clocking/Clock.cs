@@ -29,19 +29,28 @@ namespace Nomad.Clocking
 		private bool _isPaused;
 		public bool IsPaused { get { return this._isPaused; } }
 
+		public bool IsPlaying { get { return !this._isPaused; } }
+
+		private double _startTime;
+		public double StartTime { get { return this._startTime; } }
+
 		private long _totalTicksElapsed;
 		public long TotalTicksElapsed { get { return this._totalTicksElapsed; } }
 		
-		public int AvgTicksPerSecond { get { return this.CalculateAverageTicksPerSecond(); } }
+		public double AvgTicksPerSecond { get { return this.CalculateAverageTicksPerSecond(); } }
 
 		private double _totalMSElapsed;
 		public double TotalMSElapsed { get { return this._totalMSElapsed; } }
+
+		#region Constructors
 
 		public Clock(double ticksPerSecond)
 		{
 			TICKS_PER_SECOND = ticksPerSecond;
 			MS_PER_TICK = 1000 / TICKS_PER_SECOND;
 		}
+
+		#endregion
 
 		private static long GetCurrentTimeMS()
 		{
@@ -62,18 +71,19 @@ namespace Nomad.Clocking
 
 			double previous = GetCurrentTimeMS();
 
+			this._startTime = previous;
+
 			double accumulated = 0.0;
 
 			while (this.IsTicking)
 			{
-				if (this.IsPaused == false)
+				if (this.IsPlaying)
 				{
 					double current = GetCurrentTimeMS();
 
 					double elapsed = current - previous;
 
 					this._totalMSElapsed += elapsed;
-
 					accumulated += elapsed;
 
 					previous = current;
@@ -82,7 +92,7 @@ namespace Nomad.Clocking
 					{
 						++this._totalTicksElapsed;
 
-						this.LogicTick(MS_PER_TICK);
+						this.OnTick();
 
 						accumulated -= MS_PER_TICK;
 					}
@@ -115,24 +125,32 @@ namespace Nomad.Clocking
 		/// </summary>
 		/// <remarks>
 		/// A paused clock can only be "started" again by using <see cref="Clock.Play"/>
+		/// A paused clock is still considered to be ticking.
 		/// </remarks>
 		public void Pause()
 		{
 			this._isPaused = true;
 		}
 
-		private void LogicTick(double elapsed)
-		{
+		#endregion
 
+		#region Events
+
+		public delegate void TickEventHandler(object source, EventArgs args);
+		public event TickEventHandler TickEvent;
+		protected virtual void OnTick()
+		{
+			if (TickEvent != null)
+				TickEvent(this, EventArgs.Empty);
 		}
 
 		#endregion
 
-		private int CalculateAverageTicksPerSecond()
+		private double CalculateAverageTicksPerSecond()
 		{
-			int totalSeconds = (int)this.TotalMSElapsed / 1000;
+			double totalSeconds = this.TotalMSElapsed / 1000;
 
-			return (int)(this.TotalTicksElapsed / totalSeconds);
+			return (((double)this.TotalTicksElapsed) / totalSeconds);
 		}
 	}
 }

@@ -31,6 +31,21 @@ namespace Nomad.Resources
 			return exists;
 		}
 
+		/// <summary>
+		/// Will delete the log file if it exists.
+		/// </summary>
+		/// <returns>True if it existed</returns>
+		public static bool DeleteLogFile()
+		{
+			bool exists = File.Exists(LOG_FILE);
+			if (exists)
+			{
+				File.Delete(LOG_FILE);
+			}
+
+			return exists;
+		}
+
 		#endregion
 	}
 }
