@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PhysWorld
+namespace Nomad
 {
 	/// <summary>
 	/// Used to log basic information to a designated log file.

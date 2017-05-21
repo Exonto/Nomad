@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 
-namespace PhysWorld.PhysLogic
+namespace Nomad.Clock
 {
 	/// <summary>
 	/// Used to track the elapsing of game time.
