@@ -19,11 +19,13 @@ namespace Nomad.Resources
 		/// <returns>True if it already existed</returns>
 		public static bool EnsureLogFile()
 		{
+			FolderManager.EnsureLogFolder();
+
 			bool exists = File.Exists(LOG_FILE);
 
 			if (exists == false)
 			{
-				File.Create(LOG_FILE);
+				File.Create(LOG_FILE).Close();
 			}
 
 			return exists;

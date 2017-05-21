@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nomad.Resources;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,6 +18,18 @@ namespace Nomad
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new GameForm());
+
+			Initialize();
+
+			Logger.Log("Test");
+		}
+
+		/// <summary>
+		/// Initializes the game.
+		/// </summary>
+		static void Initialize()
+		{
+			FolderManager.EnsureLogFolder();
 		}
 	}
 }
