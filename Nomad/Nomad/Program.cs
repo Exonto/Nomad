@@ -1,4 +1,5 @@
-﻿using Nomad.Resources;
+﻿using Nomad.Clocking;
+using Nomad.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,8 @@ namespace Nomad
 		static void Initialize()
 		{
 			FolderManager.EnsureLogFolder();
+
+			Clock.Start();
 		}
 	}
 }
