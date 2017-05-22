@@ -1,28 +1,22 @@
-﻿using Nomad.Clocking;
-using Nomad.Resources;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace Nomad
 {
-	static class Program
-	{
-		static void Main()
-		{
-			Initialize();
-		}
-
-		/// <summary>
-		/// Initializes the game.
-		/// </summary>
-		static void Initialize()
-		{
-			FolderManager.EnsureLogFolder();
-			FileManager.DeleteLogFile();
-			FileManager.EnsureLogFile();
-
-		}
-	}
+#if WINDOWS || LINUX
+    /// <summary>
+    /// The main class.
+    /// </summary>
+    public static class Program
+    {
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        [STAThread]
+        static void Main()
+        {
+            using (var game = new NomadGame())
+                game.Run();
+        }
+    }
+#endif
 }
