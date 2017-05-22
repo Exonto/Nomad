@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nomad.Exception.Clocking;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -13,6 +14,8 @@ namespace Nomad.Clocking
 	/// </summary>
 	class Clock
 	{
+		public const double MAX_TICKS_PER_SECOND = 120;
+
 		public readonly double TICKS_PER_SECOND;
 		public readonly double MS_PER_TICK;
 		
@@ -46,6 +49,11 @@ namespace Nomad.Clocking
 
 		public Clock(double ticksPerSecond)
 		{
+			if (ticksPerSecond > MAX_TICKS_PER_SECOND)
+			{
+				throw new ClockTickLimitException(ticksPerSecond);
+			}
+
 			TICKS_PER_SECOND = ticksPerSecond;
 			MS_PER_TICK = 1000 / TICKS_PER_SECOND;
 		}
@@ -117,6 +125,11 @@ namespace Nomad.Clocking
 
 		public void Play()
 		{
+			if (this.IsPlaying)
+			{
+				throw new ClockAlreadyPlayingException();
+			}
+
 			this._isPaused = false;
 		}
 
@@ -129,6 +142,11 @@ namespace Nomad.Clocking
 		/// </remarks>
 		public void Pause()
 		{
+			if (this.IsPaused)
+			{
+				throw new ClockAlreadyPausedException();
+			}
+
 			this._isPaused = true;
 		}
 
@@ -140,6 +158,8 @@ namespace Nomad.Clocking
 		public event TickEventHandler TickEvent;
 		protected virtual void OnTick()
 		{
+			Logger.Log(this.TotalMSElapsed);
+
 			if (TickEvent != null)
 				TickEvent(this, EventArgs.Empty);
 		}

@@ -47,6 +47,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Clocking\Clock.cs" />
+    <Compile Include="Exception\Clocking\ClockTickLimitException.cs" />
+    <Compile Include="Exception\Clocking\ClockAlreadyPlayingException.cs" />
+    <Compile Include="Exception\Clocking\ClockAlreadyPausedException.cs" />
+    <Compile Include="Exception\Clocking\ClockException.cs" />
     <Compile Include="GameForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -85,7 +89,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Cartesian\" />
-    <Folder Include="Exception\Clocking\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
